@@ -1,0 +1,4 @@
+spiderutil
+beautifulsoup4
+brotli
+parsel
