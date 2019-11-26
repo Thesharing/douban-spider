@@ -1,10 +1,10 @@
 import json
 import time
 from typing import List
-
 import brotli
 
 # Parsers
+
 import re
 from bs4 import BeautifulSoup as Soup
 from parsel import Selector
@@ -39,8 +39,9 @@ class DoubanSpider:
             text = self._get(url, params=params, headers=HEADERS['api'])
             data = json.loads(text)['data']
             for item in data:
-                yield item['url']
+                yield item['url'],item['id']
             time.sleep(2)
+            start += 1  #start应该递增
 
     def _get(self, url, **kwargs):
         r = self.session.get(url, **kwargs)
@@ -62,7 +63,11 @@ class DoubanSpider:
         return content, selector
 
     def access_celebrity(self, movie_id):
-        pass
+        url = "https://movie.douban.com/subject/{}/celebrities".format(movie_id)
+        text = self._get(url, headers=HEADERS['page'],proxies=HEADERS['proxies'])
+        soup = Soup(text,'lxml')
+        items = soup.select('div[class="list-wrapper"]')  #每种类型的职员作为一个列表元素
+        return items
 
     def access_comment(self, movie_id, start=0, sort='new_score', status='P'):
         pass

@@ -8,7 +8,8 @@ HEADERS = {
         'Cache-Control': 'no-cache',
         'Accept': 'application/json, text/plain, */*',
         'DNT': '1',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36',
+        #'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36',
+        'User-Agent' : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36',
         'Sec-Fetch-Site': 'same-origin',
         'Sec-Fetch-Mode': 'cors',
         'Referer': 'https://movie.douban.com/tag/',
@@ -30,5 +31,8 @@ HEADERS = {
         'Referer': 'https://movie.douban.com/tag/',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+    },
+    'proxies':{
+        'http':'http://60.167.21.199:8118'
     }
 }
