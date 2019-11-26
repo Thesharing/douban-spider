@@ -39,7 +39,7 @@ class DoubanSpider:
             text = self._get(url, params=params, headers=HEADERS['api'])
             data = json.loads(text)['data']
             for item in data:
-                yield item['url'],item['id']
+                yield item['url']
             time.sleep(2)
             start += 1  #start应该递增
 
