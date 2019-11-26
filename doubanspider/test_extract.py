@@ -1,5 +1,6 @@
 import unittest
 
+from doubanspider.extract.count import *
 from .spider import DoubanSpider
 from .extract import *
 
@@ -23,3 +24,17 @@ class TestExtractors(unittest.TestCase):
     def test_extract_info(self):
         info = extract_info(self.content)
         self.assertEqual(len(info), 11)
+
+    def test_extract_data_count(self):
+        player = extract_data_count(self.content)['player']
+        trailer = extract_data_count(self.content)['trailer']
+        image = extract_data_count(self.content)['image']
+        short_review=extract_data_count(self.content)['review']['short']
+        long_review = extract_data_count(self.content)['review']['long']
+        discuss = extract_data_count(self.content)['discuss']
+        self.assertEqual(type(player), int)
+        self.assertEqual(type(trailer), int)
+        self.assertEqual(type(image), int)
+        self.assertEqual(type(short_review), int)
+        self.assertEqual(type(long_review), int)
+        self.assertEqual(type(discuss), int)
