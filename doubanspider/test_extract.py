@@ -1,5 +1,6 @@
 import unittest
 
+from doubanspider.extract.comment import extract_comments
 from .spider import DoubanSpider
 from .extract import *
 
@@ -10,6 +11,7 @@ class TestExtractors(unittest.TestCase):
     def setUpClass(cls):
         cls.spider = DoubanSpider()
         cls.content, cls.selector = cls.spider.access_brief('https://movie.douban.com/subject/26786669/')
+        cls.comments = cls.spider.access_comment(26786669)
 
     def test_extract_title(self):
         title, year = extract_title(self.content)
@@ -23,3 +25,7 @@ class TestExtractors(unittest.TestCase):
     def test_extract_info(self):
         info = extract_info(self.content)
         self.assertEqual(len(info), 11)
+
+    def test_extract_comments(self):
+        results = extract_comments(self.comments)
+        self.assertTrue(len(results) > 0)
