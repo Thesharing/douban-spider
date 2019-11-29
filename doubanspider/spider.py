@@ -3,6 +3,8 @@ import time
 from typing import List
 
 import brotli
+import urllib3
+from packaging import version
 
 # Parsers
 import re
@@ -18,6 +20,7 @@ class DoubanSpider:
 
     def __init__(self, session: Session = None):
         self.session = Session(retry=5, timeout=10) if session is None else session
+        self.ENABLE_BROTLI = version.parse(urllib3.__version__) < version.parse('1.25.1')
 
     def list(self, tags: List[str] = None, sort: str = 'U', start: int = 0, limit: int = 100000):
         """
@@ -44,7 +47,7 @@ class DoubanSpider:
 
     def _get(self, url, **kwargs):
         r = self.session.get(url, **kwargs)
-        if r.headers['Content-Encoding'] == 'br':
+        if r.headers['Content-Encoding'] == 'br' and self.ENABLE_BROTLI:
             return brotli.decompress(r.content).decode('utf-8')
         else:
             return r.text
