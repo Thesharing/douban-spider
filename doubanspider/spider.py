@@ -74,4 +74,11 @@ class DoubanSpider:
         pass
 
     def access_full_text(self, url):
-        pass
+        """
+        Crawl the full text page
+        :param url: 'https://movie.douban.com/j/review/full_text_id/full'  full_text_id is from review page
+        :return:
+        """
+        full_text = self._get(url, headers=HEADERS['page'])
+        return full_text
+
