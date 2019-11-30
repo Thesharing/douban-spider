@@ -1,7 +1,7 @@
 import unittest
 
-from .spider import DoubanSpider
-from .extract import *
+from doubanspider.spider import DoubanSpider
+from doubanspider.extract import *
 from doubanspider.extract.score import *
 
 
@@ -33,10 +33,15 @@ class TestExtractors(unittest.TestCase):
         three = extract_score(self.content)['详情']['3']
         four = extract_score(self.content)['详情']['4']
         five = extract_score(self.content)['详情']['5']
-        self.assertEqual(type(total_score), int)
+        res = extract_score(self.content)
+        print(res)
+        self.assertEqual(type(total_score), float)
         self.assertEqual(type(number_of_reviewers), int)
-        self.assertEqual(type(one), int)
-        self.assertEqual(type(two), int)
-        self.assertEqual(type(three), int)
-        self.assertEqual(type(four), int)
-        self.assertEqual(type(five), int)
+        self.assertEqual(type(one), float)
+        self.assertEqual(type(two), float)
+        self.assertEqual(type(three), float)
+        self.assertEqual(type(four), float)
+        self.assertEqual(type(five), float)
+
+if __name__=="__main__":
+    unittest.main()
