@@ -1,5 +1,10 @@
 # 长影评
 import re
+
+# 文字与星级的映射
+star_to_level = {"很差": 1, "较差": 2, "还行": 3, "推荐": 4, "力荐": 5}
+
+
 def extract_reviews(selector):
     """
     extract all reviews of a review page
@@ -16,15 +21,13 @@ def extract_reviews(selector):
         page_reviews.append(review)
     return page_reviews
 
+
 def extract_review(selector):
     """
     extract a review
     :param selector:the selector of a review
     :return:a review parse result
     """
-    review = {}
-    # 文字与星级的映射
-    star_to_level = {"很差": 1, "较差": 2, "还行": 3, "推荐": 4, "力荐": 5}
     header = selector.xpath('./header')
     body = selector.xpath('./div')
     username = header.xpath('./a[@class="name"]/text()').extract()[0]
@@ -48,13 +51,7 @@ def extract_review(selector):
     p = re.compile(r'\d+')
     comment = p.findall(body.xpath('./div[@class="action"]/a[@class="reply "]/text()').extract()[0])[0]
     full = body.xpath('./div[@class="review-short"]/@data-rid').extract()[0]
-    review['username'] = username
-    review['star'] = star
-    review['time'] = time
-    review['title'] = title
-    review['url'] = url
-    review['upvote'] = upvote
-    review['downvote'] = downvote
-    review['comment'] = comment
-    review['full'] = full
+    review = {'username': username, "star": star, 'time': time, 'title': title, 'url': url, 'upvote': upvote,
+              'downvote': downvote, 'comment': comment, 'full': full}
+
     return review

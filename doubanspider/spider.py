@@ -14,6 +14,7 @@ from spiderutil.network import Session
 from .headers import HEADERS
 from .extract.review import extract_reviews
 
+
 class DoubanSpider:
 
     def __init__(self, session: Session = None):
@@ -70,32 +71,26 @@ class DoubanSpider:
 
     def access_review(self, movie_id, start=0):
         """
-        crawl all reviews of a movie from start page to last page
+        crawl all review pages of a movie from start page to last page
         :param movie_id:the movie id
         :param start:the start page
-        :return:all reviews of a movie from the start page to last page
+        :return:all review pages of a movie from the start page to last page
         """
-        all_reviews = []
         # ===========获取总页数============
-        start_url = "https://movie.douban.com/subject/" +str(movie_id) + "/reviews"
+        start_url = "https://movie.douban.com/subject/" + str(movie_id) + "/reviews"
         text = self._get(start_url, headers=HEADERS['page'])
         selector = Selector(text)
         total_page = int(selector.xpath('//span[@class="thispage"]/@data-total-page').extract()[0])
-        #==============翻页查询===========
+        # ==============翻页查询===========
         last_url = start_url
-        for i in range(start,total_page + 1):
+        for i in range(start, total_page):
             next_url = start_url + "?start=" + str(i * 20)
             header = HEADERS['page']
             header['Referer'] = last_url
+            last_url = next_url
             text = self._get(next_url, headers=header)
             selector = Selector(text)
-            # 获取当前页所有的评论数，包括折叠的
-            page_reviews = extract_reviews(selector)
-            for item in page_reviews:
-                all_reviews.append(item)
-            last_url = next_url
-
-        return all_reviews
+            yield selector
 
     def access_full_text(self, url):
         pass

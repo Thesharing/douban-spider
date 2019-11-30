@@ -10,7 +10,8 @@ class TestExtractors(unittest.TestCase):
     def setUpClass(cls):
         cls.spider = DoubanSpider()
         cls.content, cls.selector = cls.spider.access_brief('https://movie.douban.com/subject/26786669/')
-        cls.review_content, cls.review_selector = cls.spider.access_brief('https://movie.douban.com/subject/26786669/reviews')
+        cls.review_content, cls.review_selector = cls.spider.access_brief(
+            'https://movie.douban.com/subject/26786669/reviews')
 
     def test_extract_title(self):
         title, year = extract_title(self.content)
