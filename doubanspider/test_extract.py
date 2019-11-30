@@ -1,8 +1,8 @@
 import unittest
 
-from .spider import DoubanSpider
-from .extract import *
-
+from doubanspider.spider import DoubanSpider
+from doubanspider.extract import *
+from doubanspider.extract.tag import *
 
 class TestExtractors(unittest.TestCase):
 
@@ -23,3 +23,11 @@ class TestExtractors(unittest.TestCase):
     def test_extract_info(self):
         info = extract_info(self.content)
         self.assertEqual(len(info), 11)
+
+    def test_extract_score(self):
+        tag = extract_tag(self.content)['tag']
+        seen = extract_tag(self.content)['seen']
+        wish = extract_tag(self.content)['wish']
+        self.assertEqual(type(tag), list)
+        self.assertEqual(type(seen), int)
+        self.assertEqual(type(wish), int)
