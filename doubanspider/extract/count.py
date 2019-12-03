@@ -9,55 +9,41 @@ def extract_data_count(content):
        :param content: the content extracted by BeautifulSoup
        :return:  dict[name: value], {'player','trailer','image','review'{'short','long'},'discuss'}
     """
-    res = {'review': {}}
-    pattern = re.compile(r'\d+')
-    celebrities = content.find('div', id='celebrities')
-    related_pic = content.find('div', id='related-pic')
-    comments_section = content.find('div', id='comments-section')
-    review_section = content.find(attrs={"class": "reviews mod movie-content"})
-    discuss = content.find(attrs={"class": "section-discussion"}).find_all(href=re.compile("discussion"))
-    if celebrities.find(href=re.compile("celebrities")) is not None:
-        if len(pattern.findall(celebrities.find(href=re.compile("celebrities")).string)):
-            player_count = int(pattern.findall(celebrities.find(href=re.compile("celebrities")).string)[0])
-        else:
-            player_count = 0
-    else:
+    celebrities = content.find('div', id='celebrities').find('a')
+    related_pic = content.find('div', id='related-pic').find(attrs={"class": "pl"})
+    trailer = related_pic.find('a', href=re.compile("trailer"))
+    image = related_pic.find('a', href=re.compile("all_photos"))
+    short_review_section = content.find('div', id='comments-section').find(attrs={"class": "pl"})
+    short_review=short_review_section.contents[1]
+    long_review_section = content.find(attrs={"class": "reviews mod movie-content"}).find(attrs={"class": "pl"})
+    long_review=long_review_section.contents[1]
+    discuss = content.find(attrs={"class": "section-discussion"}).find('p',attrs={"class": "pl"})
+    discuss_more = discuss.contents[1]
+    try:
+        player_count = int(celebrities.string.strip('全部'))
+    except Exception:
         player_count = 0
-    if related_pic.find(href=re.compile("trailer")) is not None:
-        if len(pattern.findall(related_pic.find(href=re.compile("trailer")).string)):
-            trailer_count = int(pattern.findall(related_pic.find(href=re.compile("trailer")).string)[0])
-        else:
-            trailer_count = 0
-    else:
+    try:
+        trailer_count = int(trailer.string.strip('预告片'))
+    except Exception:
         trailer_count = 0
-    if related_pic.find(href=re.compile("all_photos")) is not None:
-        if len(pattern.findall(related_pic.find(href=re.compile("all_photos")).string)):
-            image_count = int(pattern.findall(related_pic.find(href=re.compile("all_photos")).string)[0])
-        else:
-            image_count = 0
-    else:
+    try:
+        image_count = int(image.string.strip('图片'))
+    except Exception:
         image_count = 0
-    if comments_section.find(href=re.compile("comments")) is not None:
-        if len(pattern.findall(comments_section.find(href=re.compile("comments")).string)):
-            short_review = int(pattern.findall(comments_section.find(href=re.compile("comments")).string)[0])
-    else:
-        short_review = 0
-    if review_section.find(href=re.compile("reviews")) is not None:
-        if pattern.findall(review_section.find(href=re.compile("reviews")).string)[0]:
-            long_review = int(pattern.findall(review_section.find(href=re.compile("reviews")).string)[0])
-        else:
-            long_review = 0
-    else:
-        long_review = 0
-    if len(discuss) != 0:
-        if pattern.findall(discuss[len(discuss)-1].string) is not None:
-            discuss_count = int(pattern.findall(discuss[len(discuss)-1].string)[0])
-        else:
-            discuss_count = 0
-    res['player'] = player_count
-    res['trailer'] = trailer_count
-    res['image'] = image_count
-    res['review']['short'] = short_review
-    res['review']['long'] = long_review
-    res['discuss'] = discuss_count
+    try:
+        short_review_count = int(short_review.string.strip('全部').strip('条'))
+    except Exception:short_review_count=0
+    try:
+        long_review_count = int(long_review.string.strip('全部').strip('条'))
+    except Exception:long_review_count=0
+    try:
+        discuss_count = int(re.findall(r'\d+',discuss_more.string)[0])
+    except Exception:discuss_count=0
+    keys = ['player', 'trailer', 'image', 'discuss']
+    values = [player_count, trailer_count, image_count, discuss_count]
+    review_keys = ['short', 'long']
+    review_value = [short_review_count, long_review_count]
+    res = {key: value for key, value in zip(keys, values)}
+    res['review'] = {key: value for key, value in zip(review_keys, review_value)}
     return res
