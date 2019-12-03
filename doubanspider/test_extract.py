@@ -27,6 +27,6 @@ class TestExtractors(unittest.TestCase):
         self.assertEqual(len(info), 11)
 
     def test_extract_celebrity(self):
-        staffList = extract_celebrities(self.celebrities)
-        print(staffList)
+        staff_list = extract_celebrities(self.celebrities)
+        self.assertTrue(staff_list['Director'],staff_list['Cast']) #因为某些电影可能没有某些职位，所以暂时还没想到能够完全验证的条件
 

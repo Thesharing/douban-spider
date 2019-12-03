@@ -12,4 +12,4 @@ class TestSpider(unittest.TestCase):
 
     def test_celebrity(self):
         celebrities = self.spider.access_celebrity("26786669")
-        print(celebrities)
+        self.assertTrue(len(celebrities) > 0)
