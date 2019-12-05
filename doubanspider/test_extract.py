@@ -1,6 +1,7 @@
 import unittest
 
 from doubanspider.extract.comment import extract_comments
+from doubanspider.headers import HEADERS
 from .spider import DoubanSpider
 from .extract import *
 
@@ -27,5 +28,9 @@ class TestExtractors(unittest.TestCase):
         self.assertEqual(len(info), 11)
 
     def test_extract_comments(self):
-        results = extract_comments(self.comments)
+        url = 'https://movie.douban.com/subject/26786669/comments?status=P'
+        text = self.spider._get(url, headers=HEADERS['page'])
+        results = extract_comments(text)
         self.assertTrue(len(results) > 0)
+
+        return text

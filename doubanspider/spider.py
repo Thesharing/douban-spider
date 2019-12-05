@@ -65,10 +65,7 @@ class DoubanSpider:
         pass
 
     def access_comment(self, movie_id, start=0, sort='new_score', status='P'):
-        url = 'https://movie.douban.com/subject/' + str(movie_id) + '/comments?start=' + str(
-            start) + '&limit=20&sort=' + sort + '&' + 'status=' + status
-        text = self._get(url, headers=HEADERS['page'])
-        return text
+        pass
 
     def access_review(self, movie_id, start=0):
         pass
