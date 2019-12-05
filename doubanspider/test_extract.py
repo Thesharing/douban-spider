@@ -24,11 +24,11 @@ class TestExtractors(unittest.TestCase):
         info = extract_info(self.content)
         self.assertEqual(len(info), 11)
 
-    def test_extract_score(self):
+    def test_extract_tag(self):
         tagList = extract_tag(self.content)
         tag = tagList['tag']
         seen = tagList['seen']
         wish = tagList['wish']
-        self.assertEqual(type(tag), list)
-        self.assertEqual(type(seen), int)
-        self.assertEqual(type(wish), int)
+        self.assertTrue(len(tag) >= 8)
+        self.assertTrue(seen >= 92568)
+        self.assertTrue(wish >= 47687)
