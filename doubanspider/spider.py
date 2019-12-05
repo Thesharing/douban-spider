@@ -13,7 +13,7 @@ from parsel import Selector
 
 from spiderutil.network import Session
 
-from doubanspider.headers import HEADERS
+from .headers import HEADERS
 
 
 class DoubanSpider:

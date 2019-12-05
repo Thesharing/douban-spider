@@ -1,6 +1,6 @@
 import unittest
 
-from doubanspider.spider import DoubanSpider
+from .spider import DoubanSpider
 
 
 class TestSpider(unittest.TestCase):
