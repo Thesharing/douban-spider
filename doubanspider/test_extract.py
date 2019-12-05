@@ -28,5 +28,5 @@ class TestExtractors(unittest.TestCase):
 
     def test_extract_celebrity(self):
         staff_list = extract_celebrities(self.celebrities)
-        self.assertTrue(staff_list['Director']) #因为某些电影可能没有某些职位，所以暂时还没想到能够完全验证的条件
+        self.assertTrue(staff_list['Director'])
 
