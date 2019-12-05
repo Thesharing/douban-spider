@@ -2,7 +2,7 @@
 import re
 
 
-def staff_list_add(staff_list,title,info):
+def _collect_staff_list(staff_list,title,info):
     """
     analyse celebrities' message
     :param title: 职位名称
@@ -42,5 +42,5 @@ def extract_celebrities(items):
         position = item.h2.text # 演职人员种类
         title = position.split()[1]  # 获取职位
         info = item.select('div[class="info"]') #这一类中每个演职人员信息组成的列表
-        staff_list_add(staff_list,title,info)
+        _collect_staff_list(staff_list,title,info)
     return staff_list
