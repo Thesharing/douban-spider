@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup as Soup
 
 
 def extract_comments(text):
-    soup = Soup(text)
     results = []
     for div in soup.select('#comments > div.comment-item'):
         username = div.select_one('h3 > span.comment-info > a').get_text(strip=True)
@@ -21,4 +20,5 @@ def extract_comments(text):
             'vote': vote,
             'content': content
         })
-    return results
+        yield results
+    return 'done'
