@@ -69,26 +69,21 @@ class DoubanSpider:
     def access_celebrity(self, movie_id):
         pass
 
-        # 返回某部电影短评 某一页的网页内容
-        def access_comment_one_page(self, movie_id, start, sort="new_score", status="P"):
-            """
-            Return all comment of a comment page
-            :param movie_id: the movie id
-            :param sort: U - 近期热门, T - 标记最多, S - 评分最高, R - 最新上映
-            :param start: start offset
-            :param status: P - 已经看过, F - 没看过，但是想看
-            :return:
-            """
-            url = str("https://movie.douban.com/subject/" + str(movie_id) + "/comments?start=" +
-                      str(start) + "&limit=20&sort=" + sort + "&status=" + status + "&comments_only=1")
-            # print(url)
-            html = self._get(url, headers=HEADERS['comment'])
-            soup = Soup(html, 'html.parser')
-            print(soup)
-
-            print("访问第" + str(int(start / 20)) + "页，返回的数据：")
-            print({"html:": soup, "r": start / 20})
-            return {"html:": soup, "r": start / 20}
+    # 返回某部电影短评 某一页的网页内容
+    def access_comment_one_page(self, movie_id, start, sort="new_score", status="P"):
+        """
+        Return all comment of a comment page
+        :param movie_id: the movie id
+        :param sort: U - 近期热门, T - 标记最多, S - 评分最高, R - 最新上映
+        :param start: start offset
+        :param status: P - 已经看过, F - 没看过，但是想看
+        :return:
+        """
+        url = str("https://movie.douban.com/subject/" + str(movie_id) + "/comments?start=" +
+                  str(start) + "&limit=20&sort=" + sort + "&status=" + status + "&comments_only=1")
+        html = self._get(url, headers=HEADERS['comment'])
+        soup = Soup(html, 'html.parser')
+        return {"html:": soup, "r": start / 20}
 
     # 返回某部电影短评 所有页的网页内容（翻页一次调用一次前面的access_comment_one_page函数来获取某一页网页内容）
     def access_comment(self, movie_id, start=0, sort='new_score', status='P'):
@@ -101,26 +96,27 @@ class DoubanSpider:
         :return:
         """
         # 获取该电影的短评总数
-        url = str("https://movie.douban.com/subject/" + str(movie_id) + "/comments?start=" +
-                  str(start) + "&limit=20&sort=" + sort + "&status=" + status)
-        # print(url)
-        html = self._get(url, headers=HEADERS['comment'])
+        url = 'https://movie.douban.com/subject/{}/comments'.format(movie_id)
+        params = {
+            'start': start,
+            'limit': '20',
+            'sort' : sort,
+            'status' : status
+        }
+        html = self._get(url, params=params, headers=HEADERS['comment'])
+
         soup = Soup(html, 'html.parser')
         temp = soup.find(class_='is-active')
         temp_list = filter(str.isdigit, str(temp))
         temp_string = "".join(temp_list)
         temp_number = int(temp_string)
-        print("该电影的短评总数：" + str(temp_number))
         short_comments_number = temp_number
 
-        res = []
         # 从第一页开始进行翻页，直到最后一页
         while start < short_comments_number:
-            res.append(self.access_comment_one_page(movie_id, start, sort, status))
+            yield self.access_comment_one_page(movie_id, start, sort, status)
             start += 20
-            print("已经访问过的的短评数目：" + str(start))
-
-        return res
+        return 'done'
 
     def access_review(self, movie_id, start=0):
         """
