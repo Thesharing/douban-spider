@@ -14,7 +14,6 @@ class TestExtractors(unittest.TestCase):
         cls.spider = DoubanSpider()
         cls.content, cls.selector = cls.spider.access_brief('https://movie.douban.com/subject/26786669/')
 
-        cls.comments = cls.spider.access_comment(26786669)
         cls.review_content, cls.review_selector = cls.spider.access_brief(
             'https://movie.douban.com/subject/26786669/reviews')
 
@@ -34,10 +33,9 @@ class TestExtractors(unittest.TestCase):
 
 
     def test_extract_comments(self):
-        url = 'https://movie.douban.com/subject/26786669/comments?status=P'
-        text = self.spider._get(url, headers=HEADERS['page'])
-        results = extract_comments(text)
-        self.assertTrue(len(results) > 0)
+        text = self.spider.access_comment(26786669)
+        results = extract_comments(next(text)['html:'])
+        self.assertTrue(len(next(results)) > 0)
 
         return text
 
