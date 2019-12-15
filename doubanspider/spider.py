@@ -41,7 +41,7 @@ class DoubanSpider:
             for item in data:
                 yield item['url']
             time.sleep(2)
-            start += 1  #start应该递增
+            start += 20  #start应该递增
 
     def _get(self, url, **kwargs):
         r = self.session.get(url, **kwargs)
