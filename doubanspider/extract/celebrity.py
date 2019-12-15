@@ -2,7 +2,7 @@
 import re
 
 
-def _collect_staff_list(staff_list,title,info):
+def _collect_staff_list(info):
     """
     analyse celebrities' message
     :param title: 职位名称
@@ -28,7 +28,7 @@ def _collect_staff_list(staff_list,title,info):
         one_staff['link'] = content.a['href'] #职员的主页连接
         one_staff_list.append(one_staff)
         count += 1
-    staff_list[title] = one_staff_list
+    return one_staff_list
 
 
 def extract_celebrities(items):
@@ -42,5 +42,6 @@ def extract_celebrities(items):
         position = item.h2.text # 演职人员种类
         title = position.split()[1]  # 获取职位
         info = item.select('div[class="info"]') #这一类中每个演职人员信息组成的列表
-        _collect_staff_list(staff_list,title,info)
+        one_staff = _collect_staff_list(info)
+        staff_list[title] = one_staff
     return staff_list
