@@ -27,7 +27,7 @@ class TestExtractors(unittest.TestCase):
         self.assertEqual(len(info), 11)
 
     def test_extract_celebrity(self):
-        celebrities = cls.spider.access_celebrity('26786669')
+        celebrities = self.spider.access_celebrity('26786669')
         staff_list = extract_celebrities(celebrities)
         self.assertTrue(staff_list['Director'])
 
