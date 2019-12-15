@@ -5,9 +5,7 @@ import re
 def _collect_staff_list(info):
     """
     analyse celebrities' message
-    :param title: 职位名称
     :param info: 某种演职人员的所有人员信息
-    :param staff_list: 所有演职人员组成的字典
     :return:
     """
     one_staff_list = list()
