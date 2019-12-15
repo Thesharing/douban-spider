@@ -64,7 +64,7 @@ class DoubanSpider:
 
     def access_celebrity(self, movie_id):
         url = "https://movie.douban.com/subject/{}/celebrities".format(movie_id)
-        text = self._get(url, headers=HEADERS['page'],proxies=HEADERS['proxies'])
+        text = self._get(url, headers=HEADERS['page'])
         soup = Soup(text,'lxml')
         items = soup.select('div[class="list-wrapper"]')  #每种类型的职员作为一个列表元素
         return items
