@@ -10,7 +10,7 @@ class TestExtractors(unittest.TestCase):
     def setUpClass(cls):
         cls.spider = DoubanSpider()
         cls.content, cls.selector = cls.spider.access_brief('https://movie.douban.com/subject/26786669/')
-        cls.celebrities = cls.spider.access_celebrity('26786669')
+        
 
     def test_extract_title(self):
         title, year = extract_title(self.content)
@@ -27,6 +27,7 @@ class TestExtractors(unittest.TestCase):
         self.assertEqual(len(info), 11)
 
     def test_extract_celebrity(self):
-        staff_list = extract_celebrities(self.celebrities)
+        celebrities = cls.spider.access_celebrity('26786669')
+        staff_list = extract_celebrities(celebrities)
         self.assertTrue(staff_list['Director'])
 
