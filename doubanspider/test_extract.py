@@ -4,7 +4,6 @@ from .spider import DoubanSpider
 from .headers import *
 from .extract import *
 
-
 class TestExtractors(unittest.TestCase):
 
     @classmethod
@@ -26,7 +25,6 @@ class TestExtractors(unittest.TestCase):
         self.assertEqual(len(info), 11)
         
     def test_extract_reviews(self):
-        full_text = self.spider._get('https://movie.douban.com/j/review/10639399/full', headers = HEADERS['page'])
-        reviews = extract_reviews(full_text)
-        self.assertTrue(len(reviews) > 0)
-        from .review import *
+        reviews = extract_reviews(10638293)
+        text = reviews['text']
+        self.assertTrue(len(text) > 0)
