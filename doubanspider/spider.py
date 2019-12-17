@@ -80,10 +80,10 @@ class DoubanSpider:
         :return:
         """
         url = str("https://movie.douban.com/subject/" + str(movie_id) + "/comments?start=" +
-                  str(start) + "&limit=20&sort=" + sort + "&status=" + status + "&comments_only=1")
+                  str(start) + "&limit=20&sort=" + sort + "&status=" + status)
         html = self._get(url, headers=HEADERS['comment'])
         soup = Soup(html, 'html.parser')
-        return {"html:": soup, "r": start / 20}
+        return {"html": soup, "r": start / 20}
 
     # 返回某部电影短评 所有页的网页内容（翻页一次调用一次前面的access_comment_one_page函数来获取某一页网页内容）
     def access_comment(self, movie_id, start=0, sort='new_score', status='P'):
