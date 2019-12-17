@@ -4,6 +4,8 @@ from .spider import DoubanSpider
 from .extract import *
 from .extract.tag import *
 from .extract.count import *
+from .extract.score import *
+
 
 class TestExtractors(unittest.TestCase):
 
@@ -40,7 +42,6 @@ class TestExtractors(unittest.TestCase):
         reviews = extract_reviews(self.review_selector)
         self.assertTrue(len(reviews) > 0)
 
-
     def test_extract_tag(self):
         tag_list = extract_tag(self.content)
         tag = tag_list['tag']
@@ -49,3 +50,10 @@ class TestExtractors(unittest.TestCase):
         self.assertTrue(len(tag) >= 8)
         self.assertTrue(seen >= 92568)
         self.assertTrue(wish >= 47687)
+
+    def test_extract_score(self):
+        res = extract_score(self.content)
+        self.assertTrue(res['score'] > 0)
+        self.assertTrue(res['reviewer'] > 84000)
+        for i in range(5):
+            self.assertTrue(res['detail'][str(i + 1)] > 0)
