@@ -1,11 +1,14 @@
 import unittest
+
 from doubanspider.extract.comment import extract_comments
 from doubanspider.headers import HEADERS
 from doubanspider.extract.count import *
 
+
 from .spider import DoubanSpider
 from .extract import *
-
+from .extract.tag import *
+from .extract.count import *
 
 class TestExtractors(unittest.TestCase):
 
@@ -53,3 +56,12 @@ class TestExtractors(unittest.TestCase):
         self.assertTrue(len(reviews) > 0)
 
 
+
+    def test_extract_tag(self):
+        tag_list = extract_tag(self.content)
+        tag = tag_list['tag']
+        seen = tag_list['seen']
+        wish = tag_list['wish']
+        self.assertTrue(len(tag) >= 8)
+        self.assertTrue(seen >= 92568)
+        self.assertTrue(wish >= 47687)
