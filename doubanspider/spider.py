@@ -79,9 +79,15 @@ class DoubanSpider:
         :param status: P - 已经看过, F - 没看过，但是想看
         :return:
         """
-        url = str("https://movie.douban.com/subject/" + str(movie_id) + "/comments?start=" +
-                  str(start) + "&limit=20&sort=" + sort + "&status=" + status)
-        html = self._get(url, headers=HEADERS['comment'])
+        url = 'https://movie.douban.com/subject/{}/comments'.format(movie_id)
+        params = {
+            'start': start,
+            'limit': '20',
+            'sort' : sort,
+            'status' : status
+        }
+        html = self._get(url, params=params, headers=HEADERS['comment'])
+
         soup = Soup(html, 'html.parser')
         return {"html": soup, "r": start / 20}
 
@@ -116,7 +122,6 @@ class DoubanSpider:
         while start < short_comments_number:
             yield self.access_comment_one_page(movie_id, start, sort, status)
             start += 20
-        return 'done'
 
     def access_review(self, movie_id, start=0):
         """
