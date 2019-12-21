@@ -2,7 +2,7 @@
 import re
 
 
-def extract_data_count(content):
+def extract_count(content):
     """
        Extract player count of the movie. if count is none default 0
        :param content: the content extracted by BeautifulSoup
@@ -13,10 +13,10 @@ def extract_data_count(content):
     trailer = related_pic.find('a', href=re.compile("trailer"))
     image = related_pic.find('a', href=re.compile("all_photos"))
     short_review_section = content.find('div', id='comments-section').find(attrs={"class": "pl"})
-    short_review=short_review_section.contents[1]
+    short_review = short_review_section.contents[1]
     long_review_section = content.find(attrs={"class": "reviews mod movie-content"}).find(attrs={"class": "pl"})
-    long_review=long_review_section.contents[1]
-    discuss = content.find(attrs={"class": "section-discussion"}).find('p',attrs={"class": "pl"})
+    long_review = long_review_section.contents[1]
+    discuss = content.find(attrs={"class": "section-discussion"}).find('p', attrs={"class": "pl"})
     discuss_more = discuss.contents[1]
     try:
         player_count = int(celebrities.string.strip('全部'))
@@ -32,13 +32,16 @@ def extract_data_count(content):
         image_count = 0
     try:
         short_review_count = int(short_review.string.strip('全部').strip('条'))
-    except Exception:short_review_count=0
+    except Exception:
+        short_review_count = 0
     try:
         long_review_count = int(long_review.string.strip('全部').strip('条'))
-    except Exception:long_review_count=0
+    except Exception:
+        long_review_count = 0
     try:
-        discuss_count = int(re.findall(r'\d+',discuss_more.string)[0])
-    except Exception:discuss_count=0
+        discuss_count = int(re.findall(r'\d+', discuss_more.string)[0])
+    except Exception:
+        discuss_count = 0
     keys = ['player', 'trailer', 'image', 'discuss']
     values = [player_count, trailer_count, image_count, discuss_count]
     review_keys = ['short', 'long']

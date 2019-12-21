@@ -7,14 +7,12 @@ import urllib3
 from packaging import version
 
 # Parsers
-import re
 from bs4 import BeautifulSoup as Soup
 from parsel import Selector
 
 from spiderutil.network import Session
 
 from .headers import HEADERS
-from .extract.review import extract_reviews
 
 
 class DoubanSpider:
@@ -95,5 +93,8 @@ class DoubanSpider:
             selector = Selector(text)
             yield selector
 
-    def access_full_text(self, url):
-        pass
+    def access_review_text(self, review_id):
+        url = 'https://movie.douban.com/j/review/' + str(review_id) + '/full'
+        text = self._get(url, headers=HEADERS['page'])
+        data = json.loads(text)
+        return data['html']

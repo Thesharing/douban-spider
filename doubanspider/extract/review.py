@@ -1,28 +1,25 @@
 # 长影评
 import re
+from bs4 import BeautifulSoup
 
 # 文字与星级的映射
 star_to_level = {"很差": 1, "较差": 2, "还行": 3, "推荐": 4, "力荐": 5}
 
 
-def extract_reviews(selector):
+def extract_review_list(selector):
     """
     extract all reviews of a review page
     :param selector:the selector of a review page
     :return:all reviews of a review page
     """
-    page_reviews = []
     review_list = selector.xpath('//div[@class="main review-item"]')
-    review_num = len(review_list)
     # 解析每一条评论
-    for i in range(review_num):
-        review_content = review_list[i]
-        review = extract_review(review_content)
-        page_reviews.append(review)
-    return page_reviews
+    for review_content in review_list:
+        review = extract_review_item(review_content)
+        yield review
 
 
-def extract_review(selector):
+def extract_review_item(selector):
     """
     extract a review
     :param selector:the selector of a review
@@ -32,26 +29,31 @@ def extract_review(selector):
     body = selector.xpath('./div')
     username = header.xpath('./a[@class="name"]/text()').extract()[0]
     star = header.xpath('./span/@title').extract()
-    if len(star) == 0:
-        # 没有星级
-        star = "null"
-    else:
-        star = star_to_level[star[0]]
+    star = star_to_level[star[0]] if len(star) > 0 else 0
     time = header.xpath('./span[@class="main-meta"]/text()').extract()[0]
     title = body.xpath('./h2/a/text()').extract()[0]
     url = body.xpath('./h2/a/@href').extract()[0]
     upvote = body.xpath('./div[@class="action"]/a[@class="action-btn up"]/span/text()').extract()[0].strip()
-    if len(upvote) == 0:
-        # 没有upvote
-        upvote = 0
+    upvote = 0 if len(upvote) == 0 else int(upvote)
     downvote = body.xpath('./div[@class="action"]/a[@class="action-btn down"]/span/text()').extract()[0].strip()
-    if len(downvote) == 0:
-        # 没有downvote
-        downvote = 0
+    downvote = int(downvote) if len(downvote) > 0 else 0
     p = re.compile(r'\d+')
-    comment = p.findall(body.xpath('./div[@class="action"]/a[@class="reply "]/text()').extract()[0])[0]
+    comment = p.findall(body.xpath('./div[@class="action"]/a[@class="reply "]/text()').extract()[0])[0].strip()
+    comment = int(comment) if len(comment) > 0 else 0
     full = body.xpath('./div[@class="review-short"]/@data-rid').extract()[0]
-    review = {'username': username, "star": star, 'time': time, 'title': title, 'url': url, 'upvote': upvote,
+    review = {'username': username, "star": star, 'time': time, 'title': title, 'upvote': upvote,
               'downvote': downvote, 'comment': comment, 'full': full}
 
     return review
+
+
+def extract_reviews_text(html):
+    """
+    Extract the content of certain review based on review id
+    :param html: the content extracted from the full text page
+    :return: reviews, reviews without pic, blanks, tags
+    """
+    soup = BeautifulSoup(html, 'lxml')
+    text = soup.get_text()
+    text = text.replace('\n', '')
+    return html, text
