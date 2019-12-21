@@ -67,12 +67,61 @@ class DoubanSpider:
     def access_celebrity(self, movie_id):
         url = "https://movie.douban.com/subject/{}/celebrities".format(movie_id)
         text = self._get(url, headers=HEADERS['page'])
-        soup = Soup(text,'lxml')
+        soup = Soup(text, 'lxml')
         items = soup.select('div[class="list-wrapper"]')  # 每种类型的职员作为一个列表元素
         return items
 
+    def _access_comment_one_page(self, movie_id, start, sort="new_score", status="P"):
+        """
+        Return all comment of a comment page
+        返回某部电影短评 某一页的网页内容
+        :param movie_id: the movie id
+        :param sort: U - 近期热门, T - 标记最多, S - 评分最高, R - 最新上映
+        :param start: start offset
+        :param status: P - 已经看过, F - 没看过，但是想看
+        :return:
+        """
+        url = 'https://movie.douban.com/subject/{}/comments'.format(movie_id)
+        params = {
+            'start': start,
+            'limit': '20',
+            'sort': sort,
+            'status': status
+        }
+        html = self._get(url, params=params, headers=HEADERS['comment'])
+        return Soup(html, 'lxml')
+
     def access_comment(self, movie_id, start=0, sort='new_score', status='P'):
-        pass
+        """
+        crawl all comment of a movie from start page to last page
+        返回某部电影短评 所有页的网页内容（翻页一次调用一次前面的access_comment_one_page函数来获取某一页网页内容）
+        :param movie_id: the movie id
+        :param sort: U - 近期热门, T - 标记最多, S - 评分最高, R - 最新上映
+        :param start: start offset
+        :param status: P - 已经看过, F - 没看过，但是想看
+        :return:
+        """
+        # 获取该电影的短评总数
+        url = 'https://movie.douban.com/subject/{}/comments'.format(movie_id)
+        params = {
+            'start': start,
+            'limit': '20',
+            'sort': sort,
+            'status': status
+        }
+        html = self._get(url, params=params, headers=HEADERS['comment'])
+
+        soup = Soup(html, 'html.parser')
+        temp = soup.find(class_='is-active')
+        temp_list = filter(str.isdigit, str(temp))
+        temp_string = "".join(temp_list)
+        temp_number = int(temp_string)
+        short_comments_number = temp_number
+
+        # 从第一页开始进行翻页，直到最后一页
+        while start < short_comments_number:
+            yield self._access_comment_one_page(movie_id, start, sort, status)
+            start += 20
 
     def access_review(self, movie_id, start=0):
         """
@@ -81,12 +130,12 @@ class DoubanSpider:
         :param start:the start page
         :return:all review pages of a movie from the start page to last page
         """
-        # ===========获取总页数============
+        # 获取总页数
         start_url = "https://movie.douban.com/subject/" + str(movie_id) + "/reviews"
         text = self._get(start_url, headers=HEADERS['page'])
         selector = Selector(text)
         total_page = int(selector.xpath('//span[@class="thispage"]/@data-total-page').extract()[0])
-        # ==============翻页查询===========
+        # 翻页查询
         last_url = start_url
         for i in range(start, total_page):
             next_url = start_url + "?start=" + str(i * 20)

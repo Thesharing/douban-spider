@@ -59,16 +59,14 @@ class TestExtractors(unittest.TestCase):
             self.assertTrue(res['detail'][str(i + 1)] > 0)
 
     def test_extract_reviews(self):
-        for selector in self.spider.access_review('26786669'):
-            for review in extract_review_list(selector):
-                self.assertTrue(review['comment'] > 0)
-                self.assertTrue(review['upvote'] > 0)
-                self.assertTrue(review['star'] > 0)
-                self.assertTrue(len(review['username']) > 0)
-                self.assertTrue(len(review['title']) > 0)
-                self.assertTrue(len(review['time']) > 0)
-                break
-            break
+        selector = next(self.spider.access_review('26786669'))
+        review = next(extract_review_list(selector))
+        self.assertTrue(review['comment'] > 0)
+        self.assertTrue(review['upvote'] > 0)
+        self.assertTrue(review['star'] > 0)
+        self.assertTrue(len(review['username']) > 0)
+        self.assertTrue(len(review['title']) > 0)
+        self.assertTrue(len(review['time']) > 0)
 
     def test_extract_reviews_new(self):
         review = self.spider.access_review_text('10639399')
