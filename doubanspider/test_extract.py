@@ -33,7 +33,15 @@ class TestExtractors(unittest.TestCase):
         self.assertEqual(len(staff_list['Writer']), 1)
         self.assertEqual(len(staff_list['Producer']), 2)
 
-    def test_extract_count(self):
+    def test_extract_comments(self):
+        soup = self.spider.access_comment(26786669)
+        comment = next(extract_comments(next(soup)))
+        self.assertTrue(len(comment['username']) > 0)
+        self.assertTrue(len(comment['content']) > 0)
+        self.assertTrue(comment['star'] > 0)
+        self.assertTrue(comment['vote'] > 0)
+
+    def test_extract_data_count(self):
         res = extract_count(self.content)
         self.assertTrue(res['player'] >= 45)
         self.assertTrue(res['trailer'] >= 19)

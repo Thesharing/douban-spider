@@ -25,4 +25,3 @@ class TestSpider(unittest.TestCase):
     def test_access_comment(self):
         access_comment = self.spider.access_comment(26786669)
         self.assertTrue(len(next(access_comment)) > 0)
-        print(next(access_comment))

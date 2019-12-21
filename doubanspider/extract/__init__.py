@@ -6,3 +6,4 @@ from .count import extract_count
 from .score import extract_score
 from .tag import extract_tag
 from .celebrity import extract_celebrities
+from .comment import extract_comments
