@@ -24,6 +24,15 @@ class TestExtractors(unittest.TestCase):
         info = extract_info(self.content)
         self.assertEqual(len(info), 11)
 
+    def test_extract_celebrity(self):
+        celebrities = self.spider.access_celebrity('26786669')
+        staff_list = extract_celebrities(celebrities)
+        self.assertEqual(len(staff_list), 4)
+        self.assertEqual(len(staff_list['Director']), 1)
+        self.assertEqual(len(staff_list['Cast']), 42)
+        self.assertEqual(len(staff_list['Writer']), 1)
+        self.assertEqual(len(staff_list['Producer']), 2)
+
     def test_extract_count(self):
         res = extract_count(self.content)
         self.assertTrue(res['player'] >= 45)

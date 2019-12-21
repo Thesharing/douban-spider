@@ -5,3 +5,4 @@ from .review import extract_review_list, extract_review_item, extract_reviews_te
 from .count import extract_count
 from .score import extract_score
 from .tag import extract_tag
+from .celebrity import extract_celebrities

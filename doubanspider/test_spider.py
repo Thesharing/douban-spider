@@ -1,7 +1,6 @@
 import unittest
 
 from .spider import DoubanSpider
-from .extract import *
 
 
 class TestSpider(unittest.TestCase):
@@ -19,3 +18,7 @@ class TestSpider(unittest.TestCase):
         self.assertTrue(len(reviews_pages) > 0)
         if len(reviews_pages) > 1:
             self.assertNotEqual(reviews_pages[0], reviews_pages[1])
+
+    def test_celebrity(self):
+        celebrities = self.spider.access_celebrity("26786669")
+        self.assertTrue(len(celebrities) > 0)

@@ -43,6 +43,7 @@ class DoubanSpider:
             for item in data:
                 yield item['url']
             time.sleep(2)
+            start += 20  # start应该递增
 
     def _get(self, url, **kwargs):
         r = self.session.get(url, **kwargs)
@@ -57,7 +58,6 @@ class DoubanSpider:
         :param url:
         :return:
         """
-
         text = self._get(url, headers=HEADERS['page'])
         soup = Soup(text, 'lxml')
         content = soup.find('div', id='content')
@@ -65,7 +65,11 @@ class DoubanSpider:
         return content, selector
 
     def access_celebrity(self, movie_id):
-        pass
+        url = "https://movie.douban.com/subject/{}/celebrities".format(movie_id)
+        text = self._get(url, headers=HEADERS['page'])
+        soup = Soup(text,'lxml')
+        items = soup.select('div[class="list-wrapper"]')  # 每种类型的职员作为一个列表元素
+        return items
 
     def access_comment(self, movie_id, start=0, sort='new_score', status='P'):
         pass
